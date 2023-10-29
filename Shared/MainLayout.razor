@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="true"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar Elevation="2">
+        <MudLink Href="/" Color="Color.Inherit"><MudText Typo="Typo.h6">TBK Zertifikat-Tool</MudText></MudLink>
+        <MudSpacer/>
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/TehMightyPotato/tbk-certs-tool" Target="_blank" Edge="Edge.End"/>
+    </MudAppBar>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+    <MudAppBar Bottom="true" Elevation="2">
+        <MudGrid Justify="Justify.Center">
+            <MudItem>
+                <MudLink Href="https://github.com/tehmightypotato/tbk-certs-tool" Target="_blank" Typo="Typo.body2" Color="Color.Inherit">Repository</MudLink>
+            </MudItem>
+            <MudItem>
+                <MudLink Href="https://github.com/tehmightypotato/tbk-certs-tool" Target="_blank" Typo="Typo.body2" Color="Color.Inherit">Hilfe</MudLink>
+            </MudItem>
+        </MudGrid>
+
+    </MudAppBar>
+</MudLayout>

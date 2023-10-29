@@ -1,0 +1,61 @@
+﻿@using CsvHelper
+@using CsvHelper.Configuration
+@using System.Globalization
+@using TBK.Certs.Data.Models
+@page "/FileUpload"
+
+<PageTitle>TBK Zertifikats-Tool</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="flex-start justify-center flex-grow-1" Style="text-align: center">
+    @if (_file == null)
+    {
+        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFile" Accept=".csv">
+            <ButtonTemplate>
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.CloudUpload"
+                           for="@context">
+                    Lade die CSV-Tabelle hoch
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>
+    }
+    @if (_tableModels != null)
+    {
+        <MudText Typo="Typo.h6" Class="mb-10">Bitte überprüfe, ob die Daten korrekt eingelesen wurden!</MudText>
+        <MudDataGrid Items="@_tableModels">
+            <Columns>
+                <PropertyColumn Property="x => x.Name" Title="Name"/>
+                <PropertyColumn Property="x => x.Email" Title="Mail"/>
+                <PropertyColumn Property="x => x.Birthday" Title="Geburtstag"/>
+            </Columns>
+        </MudDataGrid>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-10">Weiter</MudButton>
+    }
+</MudContainer>
+
+@code {
+    private IBrowserFile? _file;
+    private List<TableModel>? _tableModels;
+
+    private async void UploadFile(IBrowserFile? file)
+    {
+        _file = file;
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            PrepareHeaderForMatch = args => args.Header.ToLower(),
+            DetectDelimiter = true
+        };
+        string content;
+        using (var reader = new StreamReader(_file?.OpenReadStream()!))
+        {
+            content = await reader.ReadToEndAsync();
+        }
+        using (var csv = new CsvReader(new StringReader(content), config))
+        {
+            _tableModels = csv.GetRecords<TableModel>().ToList();
+        }
+        StateHasChanged();
+    }
+
+}
